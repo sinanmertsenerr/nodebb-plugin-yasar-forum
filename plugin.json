@@ -1,0 +1,14 @@
+{
+	"id": "nodebb-plugin-yasar-forum",
+	"name": "Yaşar Forum",
+	"description": "The site's custom CSS and JavaScript served as cached static files",
+	"url": "https://github.com/sinanmertsenerr/nodebb-plugin-yasar-forum",
+	"library": "./library.js",
+	"hooks": [
+		{ "hook": "filter:meta.getLinkTags", "method": "addStylesheet" },
+		{ "hook": "filter:scripts.get", "method": "addScript" }
+	],
+	"staticDirs": {
+		"static": "./static"
+	}
+}

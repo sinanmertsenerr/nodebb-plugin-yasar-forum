@@ -1,0 +1,22 @@
+{
+  "name": "nodebb-plugin-yasar-forum",
+  "version": "1.0.0",
+  "description": "Yaşar Forum's theme layer: the site's custom CSS and JavaScript served as cached static files",
+  "main": "library.js",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sinanmertsenerr/nodebb-plugin-yasar-forum.git"
+  },
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "author": "Sinan Mert Sener",
+  "license": "MIT",
+  "nbbpm": {
+    "compatibility": "^4.15.0"
+  },
+  "devDependencies": {
+    "sass": "1.104.1"
+  }
+}
