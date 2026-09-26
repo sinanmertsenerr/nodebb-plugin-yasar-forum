@@ -7,7 +7,7 @@ const manifest = require('./static/manifest.json');
 
 const plugin = module.exports;
 
-const base = () => `${nconf.get('relative_path')}/plugins/nodebb-plugin-yasar-forum/static`;
+const base = () => `${nconf.get('relative_path')}/assets/plugins/nodebb-plugin-yasar-forum/static`;
 
 // ACP'deki eski özel CSS/JS hâlâ açıksa dosyalar eklenmez; aynı kod iki kez yüklenmesin.
 // Geçiş: eklentiyi etkinleştir, sonra ACP > Görünüm > Özelleşmiş İçerik'te iki anahtarı kapat. Geri dönmek için aç.
