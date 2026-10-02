@@ -489,6 +489,30 @@ function massiveConfettiShow() {
     }).observe(nav, { subtree: true, childList: true, characterData: true });
   }
 
+  // Öğrenci araçları grubu: ilk aracın üstüne "Araçlar" başlığı, ayırma çizgisine yazılı (çizgi CSS'te).
+  // Yeni araçlar ACP > Ayarlar > Navigasyon'da Timetable'ın altına eklenince kendiliğinden bu gruba girer;
+  // grubun en üstüne eklenecek bir aracın yolu TOOLS listesine de yazılmalı.
+  var TOOLS = ['/akademik-takvim', '/timetable'];
+  // Lucide graduation-cap: gruptakiler öğrenci araçları
+  var TOOLS_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/>' +
+    '<path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>';
+
+  function addToolsHeading(nav) {
+    if (nav.querySelector(':scope > .ynav-section')) return;
+    var rel = (window.config && window.config.relative_path) || '';
+    var first = Array.prototype.find.call(nav.querySelectorAll(':scope > li > a.nav-link'), function (a) {
+      return TOOLS.indexOf((a.getAttribute('href') || '').replace(rel, '')) !== -1;
+    });
+    if (!first) return;
+    var li = document.createElement('li');
+    li.className = 'ynav-section';
+    li.setAttribute('role', 'presentation');
+    li.innerHTML = '<span class="ynav-section-text visible-open">' + TOOLS_ICON + 'Araçlar</span>';
+    nav.insertBefore(li, first.parentElement);
+  }
+
   function init() {
     var nav = document.getElementById('main-nav');
     if (!nav || nav.classList.contains('ynav-ready')) return;
@@ -500,6 +524,7 @@ function massiveConfettiShow() {
     ind.setAttribute('aria-hidden', 'true');
     nav.prepend(ind);
     nav.classList.add('ynav-ready');
+    addToolsHeading(nav);
     place(nav, ind, false);
 
     if (window.jQuery) {

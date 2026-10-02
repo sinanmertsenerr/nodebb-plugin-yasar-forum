@@ -388,10 +388,55 @@ li#thecategories {
     to { stroke-dashoffset: 0; }
 }
 
-/* Öğrenci araçları (Akademik Takvim, Timetable) ayrı grup */
-#main-nav > li:has(> a[href$="/akademik-takvim"]) {
+/* Öğrenci araçları grubu: "Araçlar" başlığı ayırma çizgisine yazılı, çizgi yazının sağından devam eder.
+   Başlığı custom.js ekler (ynav-section). Menü daralınca yazı gizlenir, yerinde yalnız çizgi kalır.
+   Renk zemine karşı 6.7:1 (açık) ve 10.3:1 (koyu). */
+#main-nav > li.ynav-section {
+    margin: 6px 8px 0;
+    padding: 0 8px;
+    list-style: none;
+    color: #4d5962;
+    pointer-events: none;
+    user-select: none;
+}
+
+#main-nav .ynav-section-text {
+    align-items: center;
+    gap: 8px;
+    font-family: var(--bs-body-font-family);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+}
+
+#main-nav .ynav-section-text svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    margin-left: 1px;
+}
+
+#main-nav .ynav-section-text::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: var(--bs-border-color);
+}
+
+@media (min-width: 992px) {
+    .sidebar.open #main-nav .ynav-section-text {
+        display: flex;
+    }
+}
+
+[data-theme="dark"] #main-nav > li.ynav-section {
+    color: #c9d0d5;
+}
+
+/* Daraltılmış menü: yalnız çizgi, öğeler arası boşluk eskisiyle aynı */
+.sidebar-left:not(.open) #main-nav > li.ynav-section {
     margin-top: 4px;
-    padding-top: 10px;
+    padding: 2px 0 0;
     border-top: 1px solid var(--bs-border-color);
 }
 
