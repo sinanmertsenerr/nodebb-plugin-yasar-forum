@@ -7,8 +7,8 @@
 	"hooks": [
 		{ "hook": "filter:meta.getLinkTags", "method": "addStylesheet" },
 		{ "hook": "filter:scripts.get", "method": "addScript" },
-		{ "hook": "filter:middleware.renderHeader", "method": "closeSidebarsOnTools" },
-		{ "hook": "filter:middleware.renderFooter", "method": "closeSidebarsOnTools" },
+		{ "hook": "filter:middleware.renderHeader", "method": "sidebarState" },
+		{ "hook": "filter:middleware.renderFooter", "method": "sidebarState" },
 		{ "hook": "filter:timetable.build", "method": "gateTools" },
 		{ "hook": "filter:cv.build", "method": "gateTools" },
 		{ "hook": "filter:widget.render:html", "method": "hideToolWidgets", "priority": 20 }

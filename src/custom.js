@@ -2123,5 +2123,14 @@ function massiveConfettiShow() {
     window.jQuery(document).on('click', '[component="sidebar/toggle"]', function () {
       if (onTimetable()) restore = null;
     });
+    // Misafirin seçimi tarayıcısında kalır: Harmony yalnız girişlinin seçimini hesabına yazar. Sunucu sonraki
+    // açılışta çubukları bu çereze göre çizer (library.js sidebarState). Harmony olayı sınıf değiştikten sonra gelir.
+    window.jQuery(window).on('action:sidebar.toggle', function () {
+      if (window.app && app.user && app.user.uid > 0) return;
+      var open = !!document.querySelector('nav.sidebar-left.open');
+      var path = ((window.config && config.relative_path) || '') + '/';
+      document.cookie = 'yu-sidebars=' + (open ? 'open' : 'closed') + '; path=' + path + '; max-age=31536000; SameSite=Lax' +
+        (location.protocol === 'https:' ? '; Secure' : '');
+    });
   }
 })();

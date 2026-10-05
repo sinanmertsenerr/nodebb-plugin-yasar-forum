@@ -33,17 +33,36 @@ plugin.addScript = async function (scripts) {
 	return scripts;
 };
 
-// Araç sayfaları (timetable, CV oluşturucu) kenar çubukları kapalı çizilir: sayfa açılırken bir an açık görünüp kapanmasın.
-// Sol çubuk başlıkta, sağ çubuk alt şablonda çizildiği için iki kancaya da bağlıdır.
-// Yalnızca bu yanıttaki başlık değişir; kişinin kayıtlı ayarı ve tarayıcıdaki config aynı kalır (çıkınca eski hâline döner).
+// Kenar çubuklarının bu yanıtta açık mı kapalı mı çizileceği (sol çubuk başlıkta, sağ çubuk alt şablonda: iki kanca):
+// - Girişli: kendi kayıtlı seçimi (Harmony hesabına yazar); seçim yapmadıysa ACP'deki varsayılan.
+//   Timetable ve CV Oluşturucu'da kapalı: uygulamalar geniş alana ihtiyaç duyuyor; çıkınca seçimi geri gelir.
+// - Misafir: kapattıysa "yu-sidebars" çerezinden (custom.js yazar), yoksa ACP'deki varsayılan. Giriş kartında araç yok,
+//   orada kapatılmaz. Sunucu doğrudan doğru hâli çizer: açılışta "açık görünüp kapanma" olmaz.
+// Yalnızca bu yanıttaki başlığın config kopyası değişir; kişinin kayıtlı ayarı ve tarayıcıdaki config aynı kalır.
 const TOOL_TEMPLATES = ['timetable', 'cv'];
+const GATE_TEMPLATE = 'yu-login-gate';
+const SIDEBAR_COOKIE = 'yu-sidebars';
 
-plugin.closeSidebarsOnTools = async function (hookData) {
-	const tpl = hookData.data && hookData.data.template;
+plugin.sidebarState = async function (hookData) {
 	const config = hookData.templateData && hookData.templateData.config;
-	const gate = hookData.data && hookData.data.templateToRender === 'yu-login-gate';
-	if (tpl && !gate && TOOL_TEMPLATES.some(name => tpl[name]) && config && config.theme && config.theme.openSidebars) {
-		hookData.templateData = { ...hookData.templateData, config: { ...config, theme: { ...config.theme, openSidebars: false } } };
+	if (!config || !config.theme) {
+		return hookData;
+	}
+	const req = hookData.req || {};
+	const tpl = hookData.data && hookData.data.template;
+	const gate = hookData.data && hookData.data.templateToRender === GATE_TEMPLATE;
+	const saved = !!config.theme.openSidebars;
+	let open = saved;
+	if (!(req.uid > 0)) {
+		const pref = req.cookies && req.cookies[SIDEBAR_COOKIE];
+		if (pref === 'open' || pref === 'closed') {
+			open = pref === 'open';
+		}
+	} else if (tpl && !gate && TOOL_TEMPLATES.some(name => tpl[name])) {
+		open = false;
+	}
+	if (open !== saved) {
+		hookData.templateData = { ...hookData.templateData, config: { ...config, theme: { ...config.theme, openSidebars: open } } };
 	}
 	return hookData;
 };
@@ -64,8 +83,6 @@ const GATED = {
 		icon: svg('<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M15 18a3 3 0 1 0-6 0"/><circle cx="12" cy="13" r="2"/>'),
 	},
 };
-const GATE_TEMPLATE = 'yu-login-gate';
-
 plugin.gateTools = async function (hookData) {
 	const { req, templateData } = hookData;
 	const key = templateData && templateData.template && Object.keys(GATED).find(name => templateData.template[name]);
