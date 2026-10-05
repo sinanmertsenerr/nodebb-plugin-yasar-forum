@@ -461,6 +461,27 @@ a.nav-link[aria-label="Timetable"]:hover::after {
     animation: ynav-sheen .7s ease-out;
 }
 
+/* CV Oluşturucu: Timetable'la aynı parlama, zümrüt yeşili */
+#main-nav a.nav-link[href$="/cv"] {
+    overflow: hidden;
+}
+
+#main-nav a.nav-link[href$="/cv"]::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -60%;
+    width: 45%;
+    background: linear-gradient(90deg, transparent, rgba(16, 185, 129, .2), transparent);
+    transform: skewX(-20deg);
+    pointer-events: none;
+}
+
+#main-nav a.nav-link[href$="/cv"]:hover::after {
+    animation: ynav-sheen .7s ease-out;
+}
+
 @keyframes ynav-sheen {
     from { left: -60%; }
     to { left: 130%; }
@@ -499,7 +520,8 @@ a.nav-link[aria-label="Timetable"]:hover::after {
 
     #main-nav .ynav-current.ynav-draw .ynav-ico svg > *,
     #main-nav [component="navigation/count"].ynav-pop,
-    a.nav-link[aria-label="Timetable"]:hover::after {
+    a.nav-link[aria-label="Timetable"]:hover::after,
+    #main-nav a.nav-link[href$="/cv"]:hover::after {
         animation: none;
         stroke-dashoffset: 0;
     }
@@ -5601,17 +5623,17 @@ nav.sidebar-right.yrail [data-widget-area="sidebar-footer"] .text-center > .fw-b
 }
 
 /* Soluk gri yerine okunaklı, hafif mavimsi koyu ton (sağ çubukla aynı) */
-#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]) {
+#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):not([href$="/cv"]) {
     color: var(--yside-ink);
 }
 
-#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]) .ynav-ico {
+#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):not([href$="/cv"]) .ynav-ico {
     color: var(--yside-ico);
     transition: color .15s ease, transform .18s cubic-bezier(.2, .8, .2, 1);
 }
 
-#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):hover,
-#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):hover .ynav-ico {
+#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):not([href$="/cv"]):hover,
+#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):not([href$="/cv"]):hover .ynav-ico {
     color: var(--bs-body-color);
 }
 
@@ -5660,6 +5682,43 @@ nav.sidebar-right.yrail [data-widget-area="sidebar-footer"] .text-center > .fw-b
 
 [data-theme="dark"] #main-nav a.nav-link[aria-label="Timetable"]:hover {
     background-color: rgba(var(--bs-link-color-rgb), .14) !important;
+}
+
+/* CV Oluşturucu: Timetable kartının zümrüt yeşili eşi. Açıkta #047857 (beyazda 5.5:1), koyuda #34d399 */
+#main-nav a.nav-link[href$="/cv"] {
+    --ycv: 4, 120, 87;
+    border: 1px solid rgba(var(--ycv), .26);
+    border-radius: 10px;
+    background-color: var(--bs-body-bg) !important;
+    color: rgb(var(--ycv)) !important;
+    box-shadow: 0 1px 2px rgba(16, 32, 42, .06);
+    transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+
+#main-nav a.nav-link[href$="/cv"] .nav-text,
+#main-nav a.nav-link[href$="/cv"] .ynav-ico {
+    color: rgb(var(--ycv)) !important;
+}
+
+#main-nav a.nav-link[href$="/cv"] .nav-text {
+    font-weight: 600 !important;
+}
+
+#main-nav a.nav-link[href$="/cv"]:hover {
+    border-color: rgba(var(--ycv), .45);
+    background-color: rgba(16, 185, 129, .07) !important;
+    box-shadow: 0 6px 14px -8px rgba(var(--ycv), .55);
+}
+
+[data-theme="dark"] #main-nav a.nav-link[href$="/cv"] {
+    --ycv: 52, 211, 153;
+    border-color: rgba(var(--ycv), .32);
+    background-color: rgba(var(--ycv), .08) !important;
+    box-shadow: none;
+}
+
+[data-theme="dark"] #main-nav a.nav-link[href$="/cv"]:hover {
+    background-color: rgba(var(--ycv), .14) !important;
 }
 
 /* ******************** Masaüstü: sayfa geneli tutarlılık ******************** */
