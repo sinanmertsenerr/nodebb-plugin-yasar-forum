@@ -78,6 +78,8 @@ plugin.gateTools = async function (hookData) {
 		req.session.returnTo = path;
 	}
 	templateData.templateToRender = GATE_TEMPLATE;
+	// Aracın kendi verisi misafire gitmesin (CV uygulamasının dosya adresleri gibi)
+	['js', 'css', 'fonts'].forEach((field) => { delete templateData[field]; });
 	templateData.yuGate = {
 		key,
 		...GATED[key],
@@ -85,5 +87,17 @@ plugin.gateTools = async function (hookData) {
 		registerUrl: `${rel}/register`,
 		allowRegistration: meta.config.registrationType === 'normal',
 	};
+	return hookData;
+};
+
+// Giriş kartında sayfaya ait bileşenler (ör. Timetable'ın iframe'i) misafire hiç gitmez: ne HTML'e ne sayfa verisine.
+// Yalnızca her sayfada olan alanlar kalır (üst bilgi, alt bilgi, marka şeridi, kenar çubuğu altı).
+const GATE_KEEP_AREAS = new Set(['header', 'footer', 'brand-header', 'sidebar-footer']);
+
+plugin.hideToolWidgets = async function (hookData) {
+	const gate = hookData && hookData.templateData && hookData.templateData.templateToRender === GATE_TEMPLATE;
+	if (gate && !GATE_KEEP_AREAS.has(hookData.location)) {
+		hookData.html = '';
+	}
 	return hookData;
 };
