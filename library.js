@@ -36,7 +36,7 @@ plugin.addScript = async function (scripts) {
 // Kenar çubuklarının bu yanıtta açık mı kapalı mı çizileceği (sol çubuk başlıkta, sağ çubuk alt şablonda: iki kanca):
 // - Girişli: kendi kayıtlı seçimi (Harmony hesabına yazar); seçim yapmadıysa ACP'deki varsayılan.
 //   Timetable ve CV Oluşturucu'da kapalı: uygulamalar geniş alana ihtiyaç duyuyor; çıkınca seçimi geri gelir.
-// - Misafir: kapattıysa "yu-sidebars" çerezinden (custom.js yazar), yoksa ACP'deki varsayılan. Giriş kartında araç yok,
+// - Misafir: açık; kendisi kapattıysa kapalı ("yu-sidebars" çerezi, custom.js yazar). Giriş kartında araç yok,
 //   orada kapatılmaz. Sunucu doğrudan doğru hâli çizer: açılışta "açık görünüp kapanma" olmaz.
 // Yalnızca bu yanıttaki başlığın config kopyası değişir; kişinin kayıtlı ayarı ve tarayıcıdaki config aynı kalır.
 const TOOL_TEMPLATES = ['timetable', 'cv'];
@@ -54,10 +54,7 @@ plugin.sidebarState = async function (hookData) {
 	const saved = !!config.theme.openSidebars;
 	let open = saved;
 	if (!(req.uid > 0)) {
-		const pref = req.cookies && req.cookies[SIDEBAR_COOKIE];
-		if (pref === 'open' || pref === 'closed') {
-			open = pref === 'open';
-		}
+		open = (req.cookies && req.cookies[SIDEBAR_COOKIE]) !== 'closed';
 	} else if (tpl && !gate && TOOL_TEMPLATES.some(name => tpl[name])) {
 		open = false;
 	}
