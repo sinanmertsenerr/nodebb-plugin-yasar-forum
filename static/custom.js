@@ -494,7 +494,7 @@ function massiveConfettiShow() {
   // Öğrenci araçları grubu: ilk aracın üstüne "Araçlar" başlığı, ayırma çizgisine yazılı (çizgi CSS'te).
   // Yeni araçlar ACP > Ayarlar > Navigasyon'da Timetable'ın altına eklenince kendiliğinden bu gruba girer;
   // grubun en üstüne eklenecek bir aracın yolu TOOLS listesine de yazılmalı.
-  var TOOLS = ['/akademik-takvim', '/timetable'];
+  var TOOLS = ['/akademik-takvim', '/timetable', '/cv'];
   // Lucide graduation-cap: gruptakiler öğrenci araçları
   var TOOLS_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
     'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
@@ -2090,14 +2090,16 @@ function massiveConfettiShow() {
 })();
 
 
-// Timetable sayfasında kenar çubukları kapalı başlar: uygulama geniş alana ihtiyaç duyuyor.
+// Timetable ve CV sayfalarında kenar çubukları kapalı başlar: uygulamalar geniş alana ihtiyaç duyuyor.
 // Sadece görünüm değişir, kullanıcının kayıtlı "açık kenar çubukları" ayarına dokunulmaz; sayfadan çıkınca eski hâline döner.
 // Kullanıcı timetable'dayken çubukları kendisi açıp kaparsa (Harmony bunu kaydeder) artık onun seçimi geçerlidir.
 (function () {
   var restore = null;
 
+  // Geniş alan isteyen araç sayfaları: timetable ve CV oluşturucu
   function onTimetable() {
-    return !!(window.ajaxify && ajaxify.data && ajaxify.data.template && ajaxify.data.template.timetable);
+    var tpl = window.ajaxify && ajaxify.data && ajaxify.data.template;
+    return !!(tpl && (tpl.timetable || tpl.cv));
   }
 
   function apply() {
