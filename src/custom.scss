@@ -8085,3 +8085,83 @@ a.nav-link[aria-label="Timetable"] i {
 a.nav-link[aria-label="Timetable"]:hover {
   background-color: #1565c0 !important;
 }
+
+/* ******************** Öğrenci araçları: misafir için giriş kartı ******************** */
+/* Timetable ve CV Oluşturucu menüde herkese görünür; misafir tıklayınca aracın yerine bu kart gelir (library.js gateTools) */
+.yu-gate {
+    display: flex;
+    justify-content: center;
+    padding: 56px 16px 40px;
+}
+
+.yu-gate-card {
+    --ygate: var(--bs-link-color-rgb);
+    width: 100%;
+    max-width: 440px;
+    padding: 32px 28px 28px;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 16px;
+    background-color: var(--bs-body-bg);
+    box-shadow: 0 1px 2px rgba(16, 32, 42, .05), 0 12px 32px -18px rgba(16, 32, 42, .35);
+    text-align: center;
+}
+
+.yu-gate--cv .yu-gate-card {
+    --ygate: 4, 120, 87;
+}
+
+[data-theme="dark"] .yu-gate--cv .yu-gate-card {
+    --ygate: 52, 211, 153;
+}
+
+.yu-gate-ico {
+    display: inline-grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 14px;
+    border-radius: 16px;
+    background-color: rgba(var(--ygate), .1);
+    color: rgb(var(--ygate));
+}
+
+.yu-gate-ico svg {
+    width: 28px;
+    height: 28px;
+}
+
+.yu-gate-title {
+    margin: 0 0 8px;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.yu-gate-text {
+    margin: 0 0 18px;
+    color: var(--bs-secondary-color);
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.yu-gate-need {
+    margin: 0 0 14px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.yu-gate-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+.yu-gate-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 132px;
+    min-height: 44px;
+    border-radius: 10px;
+    font-weight: 600;
+}

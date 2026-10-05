@@ -2101,6 +2101,8 @@ function massiveConfettiShow() {
   // Geniş alan isteyen araç sayfaları: timetable ve CV oluşturucu
   function onTimetable() {
     var tpl = window.ajaxify && ajaxify.data && ajaxify.data.template;
+    // Misafire gösterilen giriş kartında araç yok: çubuklar kapanmaz
+    if (window.ajaxify && ajaxify.data && ajaxify.data.templateToRender === 'yu-login-gate') return false;
     return !!(tpl && (tpl.timetable || tpl.cv));
   }
 
