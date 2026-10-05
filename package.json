@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-yasar-forum",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Yaşar Forum's theme layer: the site's custom CSS and JavaScript served as cached static files",
   "main": "library.js",
   "private": true,

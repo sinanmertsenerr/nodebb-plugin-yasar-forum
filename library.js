@@ -34,6 +34,7 @@ plugin.addScript = async function (scripts) {
 };
 
 // Araç sayfaları (timetable, CV oluşturucu) kenar çubukları kapalı çizilir: sayfa açılırken bir an açık görünüp kapanmasın.
+// Sol çubuk başlıkta, sağ çubuk alt şablonda çizildiği için iki kancaya da bağlıdır.
 // Yalnızca bu yanıttaki başlık değişir; kişinin kayıtlı ayarı ve tarayıcıdaki config aynı kalır (çıkınca eski hâline döner).
 const TOOL_TEMPLATES = ['timetable', 'cv'];
 

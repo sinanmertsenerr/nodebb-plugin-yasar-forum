@@ -7,7 +7,8 @@
 	"hooks": [
 		{ "hook": "filter:meta.getLinkTags", "method": "addStylesheet" },
 		{ "hook": "filter:scripts.get", "method": "addScript" },
-		{ "hook": "filter:middleware.renderHeader", "method": "closeSidebarsOnTools" }
+		{ "hook": "filter:middleware.renderHeader", "method": "closeSidebarsOnTools" },
+		{ "hook": "filter:middleware.renderFooter", "method": "closeSidebarsOnTools" }
 	],
 	"staticDirs": {
 		"static": "./static"
