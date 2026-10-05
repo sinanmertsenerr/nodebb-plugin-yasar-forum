@@ -32,3 +32,16 @@ plugin.addScript = async function (scripts) {
 	}
 	return scripts;
 };
+
+// Araç sayfaları (timetable, CV oluşturucu) kenar çubukları kapalı çizilir: sayfa açılırken bir an açık görünüp kapanmasın.
+// Yalnızca bu yanıttaki başlık değişir; kişinin kayıtlı ayarı ve tarayıcıdaki config aynı kalır (çıkınca eski hâline döner).
+const TOOL_TEMPLATES = ['timetable', 'cv'];
+
+plugin.closeSidebarsOnTools = async function (hookData) {
+	const tpl = hookData.data && hookData.data.template;
+	const config = hookData.templateData && hookData.templateData.config;
+	if (tpl && TOOL_TEMPLATES.some(name => tpl[name]) && config && config.theme && config.theme.openSidebars) {
+		hookData.templateData = { ...hookData.templateData, config: { ...config, theme: { ...config.theme, openSidebars: false } } };
+	}
+	return hookData;
+};

@@ -2104,7 +2104,8 @@ function massiveConfettiShow() {
     var bars = document.querySelectorAll('nav.sidebar-left, nav.sidebar-right');
     if (!bars.length) return;
     if (onTimetable()) {
-      if (restore === null) restore = bars[0].classList.contains('open');
+      // Sunucu çubukları zaten kapalı çizer; kişinin asıl tercihi config.theme.openSidebars'ta durur
+      if (restore === null) restore = bars[0].classList.contains('open') || !!(window.config && config.theme && config.theme.openSidebars);
       bars.forEach(function (b) { b.classList.remove('open'); });
     } else if (restore !== null) {
       if (restore) bars.forEach(function (b) { b.classList.add('open'); });
