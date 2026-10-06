@@ -379,6 +379,8 @@ function massiveConfettiShow() {
     'calendar': '<path d="M16 14v2.2l1.6 1"/><path d="M16 2v3"/><path d="M21 7.338V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h2.338"/><path d="M3 9h5.859"/><path d="M8 2v3"/><circle cx="16" cy="16" r="6"/>',
     // CV Oluşturucu (ACP'de fa-file-lines seçilir) -> Lucide file-user
     'file-lines': '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M15 18a3 3 0 1 0-6 0"/><circle cx="12" cy="13" r="2"/>',
+    // PDF Araçları (ACP'de fa-file-pdf seçilir) -> Lucide file-text
+    'file-pdf': '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>',
     'angles-left': '<path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/>'
   };
 
@@ -494,7 +496,7 @@ function massiveConfettiShow() {
   // Öğrenci araçları grubu: ilk aracın üstüne "Araçlar" başlığı, ayırma çizgisine yazılı (çizgi CSS'te).
   // Yeni araçlar ACP > Ayarlar > Navigasyon'da Timetable'ın altına eklenince kendiliğinden bu gruba girer;
   // grubun en üstüne eklenecek bir aracın yolu TOOLS listesine de yazılmalı.
-  var TOOLS = ['/timetable', '/cv', '/akademik-takvim'];
+  var TOOLS = ['/timetable', '/cv', '/pdf', '/akademik-takvim'];
   // Lucide graduation-cap: gruptakiler öğrenci araçları
   var TOOLS_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
     'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
@@ -2090,18 +2092,18 @@ function massiveConfettiShow() {
 })();
 
 
-// Timetable ve CV sayfalarında kenar çubukları kapalı başlar: uygulamalar geniş alana ihtiyaç duyuyor.
+// Timetable, CV ve PDF sayfalarında kenar çubukları kapalı başlar: uygulamalar geniş alana ihtiyaç duyuyor.
 // Sadece görünüm değişir, kullanıcının kayıtlı "açık kenar çubukları" ayarına dokunulmaz; sayfadan çıkınca eski hâline döner.
 // Kullanıcı timetable'dayken çubukları kendisi açıp kaparsa (Harmony bunu kaydeder) artık onun seçimi geçerlidir.
 (function () {
   var restore = null;
 
-  // Geniş alan isteyen araç sayfaları: timetable ve CV oluşturucu
+  // Geniş alan isteyen araç sayfaları: timetable, CV oluşturucu ve PDF araçları
   function onTimetable() {
     var tpl = window.ajaxify && ajaxify.data && ajaxify.data.template;
     // Misafire gösterilen giriş kartında araç yok: çubuklar kapanmaz
     if (window.ajaxify && ajaxify.data && ajaxify.data.templateToRender === 'yu-login-gate') return false;
-    return !!(tpl && (tpl.timetable || tpl.cv));
+    return !!(tpl && (tpl.timetable || tpl.cv || tpl.pdf));
   }
 
   function apply() {

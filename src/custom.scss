@@ -482,6 +482,27 @@ a.nav-link[aria-label="Timetable"]:hover::after {
     animation: ynav-sheen .7s ease-out;
 }
 
+/* PDF Araçları: aynı parlama, mor */
+#main-nav a.nav-link[href$="/pdf"] {
+    overflow: hidden;
+}
+
+#main-nav a.nav-link[href$="/pdf"]::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -60%;
+    width: 45%;
+    background: linear-gradient(90deg, transparent, rgba(124, 58, 237, .2), transparent);
+    transform: skewX(-20deg);
+    pointer-events: none;
+}
+
+#main-nav a.nav-link[href$="/pdf"]:hover::after {
+    animation: ynav-sheen .7s ease-out;
+}
+
 @keyframes ynav-sheen {
     from { left: -60%; }
     to { left: 130%; }
@@ -521,7 +542,8 @@ a.nav-link[aria-label="Timetable"]:hover::after {
     #main-nav .ynav-current.ynav-draw .ynav-ico svg > *,
     #main-nav [component="navigation/count"].ynav-pop,
     a.nav-link[aria-label="Timetable"]:hover::after,
-    #main-nav a.nav-link[href$="/cv"]:hover::after {
+    #main-nav a.nav-link[href$="/cv"]:hover::after,
+    #main-nav a.nav-link[href$="/pdf"]:hover::after {
         animation: none;
         stroke-dashoffset: 0;
     }
@@ -5623,17 +5645,17 @@ nav.sidebar-right.yrail [data-widget-area="sidebar-footer"] .text-center > .fw-b
 }
 
 /* Soluk gri yerine okunaklı, hafif mavimsi koyu ton (sağ çubukla aynı) */
-#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):not([href$="/cv"]) {
+#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):not([href$="/cv"]):not([href$="/pdf"]) {
     color: var(--yside-ink);
 }
 
-#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):not([href$="/cv"]) .ynav-ico {
+#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):not([href$="/cv"]):not([href$="/pdf"]) .ynav-ico {
     color: var(--yside-ico);
     transition: color .15s ease, transform .18s cubic-bezier(.2, .8, .2, 1);
 }
 
-#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):not([href$="/cv"]):hover,
-#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):not([href$="/cv"]):hover .ynav-ico {
+#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):not([href$="/cv"]):not([href$="/pdf"]):hover,
+#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):not([href$="/cv"]):not([href$="/pdf"]):hover .ynav-ico {
     color: var(--bs-body-color);
 }
 
@@ -5719,6 +5741,43 @@ nav.sidebar-right.yrail [data-widget-area="sidebar-footer"] .text-center > .fw-b
 
 [data-theme="dark"] #main-nav a.nav-link[href$="/cv"]:hover {
     background-color: rgba(var(--ycv), .14) !important;
+}
+
+/* PDF Araçları: CV kartının mor eşi. Açıkta #6d28d9 (beyazda 7.1:1), koyuda #c4b5fd */
+#main-nav a.nav-link[href$="/pdf"] {
+    --ypdf: 109, 40, 217;
+    border: 1px solid rgba(var(--ypdf), .26);
+    border-radius: 10px;
+    background-color: var(--bs-body-bg) !important;
+    color: rgb(var(--ypdf)) !important;
+    box-shadow: 0 1px 2px rgba(16, 32, 42, .06);
+    transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+
+#main-nav a.nav-link[href$="/pdf"] .nav-text,
+#main-nav a.nav-link[href$="/pdf"] .ynav-ico {
+    color: rgb(var(--ypdf)) !important;
+}
+
+#main-nav a.nav-link[href$="/pdf"] .nav-text {
+    font-weight: 600 !important;
+}
+
+#main-nav a.nav-link[href$="/pdf"]:hover {
+    border-color: rgba(var(--ypdf), .45);
+    background-color: rgba(var(--ypdf), .07) !important;
+    box-shadow: 0 6px 14px -8px rgba(var(--ypdf), .55);
+}
+
+[data-theme="dark"] #main-nav a.nav-link[href$="/pdf"] {
+    --ypdf: 196, 181, 253;
+    border-color: rgba(var(--ypdf), .32);
+    background-color: rgba(var(--ypdf), .08) !important;
+    box-shadow: none;
+}
+
+[data-theme="dark"] #main-nav a.nav-link[href$="/pdf"]:hover {
+    background-color: rgba(var(--ypdf), .14) !important;
 }
 
 /* ******************** Masaüstü: sayfa geneli tutarlılık ******************** */
@@ -8087,7 +8146,7 @@ a.nav-link[aria-label="Timetable"]:hover {
 }
 
 /* ******************** Öğrenci araçları: misafir için giriş kartı ******************** */
-/* Timetable ve CV Oluşturucu menüde herkese görünür; misafir tıklayınca aracın yerine bu kart gelir (library.js gateTools) */
+/* Timetable, CV Oluşturucu ve PDF Araçları menüde herkese görünür; misafir tıklayınca aracın yerine bu kart gelir (library.js gateTools) */
 .yu-gate {
     display: flex;
     justify-content: center;
@@ -8112,6 +8171,14 @@ a.nav-link[aria-label="Timetable"]:hover {
 
 [data-theme="dark"] .yu-gate--cv .yu-gate-card {
     --ygate: 52, 211, 153;
+}
+
+.yu-gate--pdf .yu-gate-card {
+    --ygate: 109, 40, 217;
+}
+
+[data-theme="dark"] .yu-gate--pdf .yu-gate-card {
+    --ygate: 196, 181, 253;
 }
 
 .yu-gate-ico {

@@ -11,6 +11,7 @@
 		{ "hook": "filter:middleware.renderFooter", "method": "sidebarState" },
 		{ "hook": "filter:timetable.build", "method": "gateTools" },
 		{ "hook": "filter:cv.build", "method": "gateTools" },
+		{ "hook": "filter:pdf.build", "method": "gateTools" },
 		{ "hook": "filter:widget.render:html", "method": "hideToolWidgets", "priority": 20 }
 	],
 	"templates": "templates",

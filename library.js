@@ -35,11 +35,11 @@ plugin.addScript = async function (scripts) {
 
 // Kenar çubuklarının bu yanıtta açık mı kapalı mı çizileceği (sol çubuk başlıkta, sağ çubuk alt şablonda: iki kanca):
 // - Girişli: kendi kayıtlı seçimi (Harmony hesabına yazar); seçim yapmadıysa ACP'deki varsayılan.
-//   Timetable ve CV Oluşturucu'da kapalı: uygulamalar geniş alana ihtiyaç duyuyor; çıkınca seçimi geri gelir.
+//   Timetable, CV Oluşturucu ve PDF Araçları'nda kapalı: uygulamalar geniş alana ihtiyaç duyuyor; çıkınca seçimi geri gelir.
 // - Misafir: açık; kendisi kapattıysa kapalı ("yu-sidebars" çerezi, custom.js yazar). Giriş kartında araç yok,
 //   orada kapatılmaz. Sunucu doğrudan doğru hâli çizer: açılışta "açık görünüp kapanma" olmaz.
 // Yalnızca bu yanıttaki başlığın config kopyası değişir; kişinin kayıtlı ayarı ve tarayıcıdaki config aynı kalır.
-const TOOL_TEMPLATES = ['timetable', 'cv'];
+const TOOL_TEMPLATES = ['timetable', 'cv', 'pdf'];
 const GATE_TEMPLATE = 'yu-login-gate';
 const SIDEBAR_COOKIE = 'yu-sidebars';
 
@@ -64,7 +64,7 @@ plugin.sidebarState = async function (hookData) {
 	return hookData;
 };
 
-// Öğrenci araçları (Timetable, CV Oluşturucu) menüde herkese görünür ama yalnızca girişli kullanılır.
+// Öğrenci araçları (Timetable, CV Oluşturucu, PDF Araçları) menüde herkese görünür ama yalnızca girişli kullanılır.
 // Misafire aracın yerine giriş kartı çizilir (sunucuda, sayfa geçişlerinde de); aracın kendisi HTML'e hiç girmez.
 // Dönüş adresi oturuma yazılır: giriş yapınca aynı sayfaya dönülür (NodeBB'nin kendi yöntemi, misafir zaten oturum alıyor).
 const svg = inner => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
@@ -73,6 +73,11 @@ const GATED = {
 		title: 'Timetable',
 		text: 'Derslerini seç, çakışmayan haftalık ders programını saniyeler içinde oluştur.',
 		icon: svg('<path d="M16 14v2.2l1.6 1"/><path d="M16 2v3"/><path d="M21 7.338V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h2.338"/><path d="M3 9h5.859"/><path d="M8 2v3"/><circle cx="16" cy="16" r="6"/>'),
+	},
+	pdf: {
+		title: 'PDF Araçları',
+		text: 'PDF\'lerini birleştir, böl, sırala, küçült. Dosyaların cihazından çıkmaz.',
+		icon: svg('<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>'),
 	},
 	cv: {
 		title: 'CV Oluşturucu',
@@ -92,7 +97,7 @@ plugin.gateTools = async function (hookData) {
 		req.session.returnTo = path;
 	}
 	templateData.templateToRender = GATE_TEMPLATE;
-	// Aracın kendi verisi misafire gitmesin (CV uygulamasının dosya adresleri gibi)
+	// Aracın kendi verisi misafire gitmesin (CV ve PDF uygulamalarının dosya adresleri gibi)
 	['js', 'css', 'fonts'].forEach((field) => { delete templateData[field]; });
 	templateData.yuGate = {
 		key,
