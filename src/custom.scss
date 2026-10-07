@@ -503,6 +503,27 @@ a.nav-link[aria-label="Timetable"]:hover::after {
     animation: ynav-sheen .7s ease-out;
 }
 
+/* Erasmus+: aynı parlama, sarı */
+#main-nav a.nav-link[href$="/erasmus"] {
+    overflow: hidden;
+}
+
+#main-nav a.nav-link[href$="/erasmus"]::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -60%;
+    width: 45%;
+    background: linear-gradient(90deg, transparent, rgba(234, 179, 8, .25), transparent);
+    transform: skewX(-20deg);
+    pointer-events: none;
+}
+
+#main-nav a.nav-link[href$="/erasmus"]:hover::after {
+    animation: ynav-sheen .7s ease-out;
+}
+
 @keyframes ynav-sheen {
     from { left: -60%; }
     to { left: 130%; }
@@ -543,7 +564,8 @@ a.nav-link[aria-label="Timetable"]:hover::after {
     #main-nav [component="navigation/count"].ynav-pop,
     a.nav-link[aria-label="Timetable"]:hover::after,
     #main-nav a.nav-link[href$="/cv"]:hover::after,
-    #main-nav a.nav-link[href$="/pdf"]:hover::after {
+    #main-nav a.nav-link[href$="/pdf"]:hover::after,
+    #main-nav a.nav-link[href$="/erasmus"]:hover::after {
         animation: none;
         stroke-dashoffset: 0;
     }
@@ -5645,17 +5667,17 @@ nav.sidebar-right.yrail [data-widget-area="sidebar-footer"] .text-center > .fw-b
 }
 
 /* Soluk gri yerine okunaklı, hafif mavimsi koyu ton (sağ çubukla aynı) */
-#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):not([href$="/cv"]):not([href$="/pdf"]) {
+#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):not([href$="/cv"]):not([href$="/pdf"]):not([href$="/erasmus"]) {
     color: var(--yside-ink);
 }
 
-#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):not([href$="/cv"]):not([href$="/pdf"]) .ynav-ico {
+#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):not([href$="/cv"]):not([href$="/pdf"]):not([href$="/erasmus"]) .ynav-ico {
     color: var(--yside-ico);
     transition: color .15s ease, transform .18s cubic-bezier(.2, .8, .2, 1);
 }
 
-#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):not([href$="/cv"]):not([href$="/pdf"]):hover,
-#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):not([href$="/cv"]):not([href$="/pdf"]):hover .ynav-ico {
+#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):not([href$="/cv"]):not([href$="/pdf"]):not([href$="/erasmus"]):hover,
+#main-nav.ynav-ready > li > .nav-link:not(.ynav-current):not([href$="/timetable"]):not([href$="/cv"]):not([href$="/pdf"]):not([href$="/erasmus"]):hover .ynav-ico {
     color: var(--bs-body-color);
 }
 
@@ -5778,6 +5800,43 @@ nav.sidebar-right.yrail [data-widget-area="sidebar-footer"] .text-center > .fw-b
 
 [data-theme="dark"] #main-nav a.nav-link[href$="/pdf"]:hover {
     background-color: rgba(var(--ypdf), .14) !important;
+}
+
+/* Erasmus+: PDF kartının sarı eşi. Açıkta #a16207 (beyazda 4.9:1), koyuda #fde047 */
+#main-nav a.nav-link[href$="/erasmus"] {
+    --yers: 161, 98, 7;
+    border: 1px solid rgba(var(--yers), .3);
+    border-radius: 10px;
+    background-color: var(--bs-body-bg) !important;
+    color: rgb(var(--yers)) !important;
+    box-shadow: 0 1px 2px rgba(16, 32, 42, .06);
+    transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+
+#main-nav a.nav-link[href$="/erasmus"] .nav-text,
+#main-nav a.nav-link[href$="/erasmus"] .ynav-ico {
+    color: rgb(var(--yers)) !important;
+}
+
+#main-nav a.nav-link[href$="/erasmus"] .nav-text {
+    font-weight: 600 !important;
+}
+
+#main-nav a.nav-link[href$="/erasmus"]:hover {
+    border-color: rgba(var(--yers), .5);
+    background-color: rgba(var(--yers), .08) !important;
+    box-shadow: 0 6px 14px -8px rgba(var(--yers), .55);
+}
+
+[data-theme="dark"] #main-nav a.nav-link[href$="/erasmus"] {
+    --yers: 253, 224, 71;
+    border-color: rgba(var(--yers), .32);
+    background-color: rgba(var(--yers), .08) !important;
+    box-shadow: none;
+}
+
+[data-theme="dark"] #main-nav a.nav-link[href$="/erasmus"]:hover {
+    background-color: rgba(var(--yers), .14) !important;
 }
 
 /* ******************** Masaüstü: sayfa geneli tutarlılık ******************** */
