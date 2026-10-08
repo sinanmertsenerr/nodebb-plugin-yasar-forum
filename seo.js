@@ -235,22 +235,8 @@ seo.categoriesTitle = async function (hookData) {
 	return hookData;
 };
 
-// JSON-LD: ana sayfada site (Google'daki site adı ve arama kutusu), konularda forum gönderisi (forum sonuç görünümü)
-const strip = html => String(html || '')
-	.replace(/<(script|style)[\s\S]*?<\/\1>/gi, ' ')
-	.replace(/<[^>]+>/g, ' ')
-	.replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-	.replace(/&quot;/g, '"').replace(/&#x27;|&#39;/g, '\'').replace(/&#x2F;/g, '/')
-	.replace(/\s+/g, ' ')
-	.trim();
-const iso = ms => (Number(ms) > 0 ? new Date(Number(ms)).toISOString() : undefined);
-const person = (u) => {
-	if (!u || !u.username) {
-		return { '@type': 'Person', name: 'Anonim' };
-	}
-	return { '@type': 'Person', name: u.displayname || u.username, url: u.userslug ? `${siteUrl()}/user/${u.userslug}` : undefined };
-};
-
+// JSON-LD: ana sayfada site (Google'daki site adı ve arama kutusu).
+// Konuların forum verisini (DiscussionForumPosting) tema zaten yazıyor: ikinci kopya Google'da hata veriyor.
 function websiteLd() {
 	return {
 		'@context': 'https://schema.org',
@@ -269,57 +255,18 @@ function websiteLd() {
 	};
 }
 
-function topicLd(t) {
-	const posts = Array.isArray(t.posts) ? t.posts : [];
-	const main = posts.find(p => Number(p.index) === 0);
-	if (!main) {
-		return null;
-	}
-	const url = `${siteUrl()}/topic/${t.slug}`;
-	return {
-		'@context': 'https://schema.org',
-		'@type': 'DiscussionForumPosting',
-		'@id': url,
-		url,
-		headline: strip(t.titleRaw || t.title).slice(0, 110),
-		text: strip(main.content).slice(0, 5000) || strip(t.titleRaw || t.title),
-		author: person(main.user),
-		datePublished: iso(t.timestamp),
-		dateModified: iso(Math.max(Number(t.lastposttime) || 0, Number(main.edited) || 0)),
-		articleSection: t.category ? strip(t.category.name) : undefined,
-		inLanguage: 'tr-TR',
-		interactionStatistic: [
-			{ '@type': 'InteractionCounter', interactionType: 'https://schema.org/CommentAction', userInteractionCount: Math.max(0, (Number(t.postcount) || 1) - 1) },
-			{ '@type': 'InteractionCounter', interactionType: 'https://schema.org/ViewAction', userInteractionCount: Number(t.viewcount) || 0 },
-		],
-		comment: posts.filter(p => Number(p.index) > 0 && !p.deleted).slice(0, 20).map(p => ({
-			'@type': 'Comment',
-			url: `${siteUrl()}/post/${p.pid}`,
-			text: strip(p.content).slice(0, 2000),
-			author: person(p.user),
-			datePublished: iso(p.timestamp),
-		})),
-	};
-}
-
 const script = obj => `<script type="application/ld+json">${JSON.stringify(obj).replace(/</g, '\\u003c')}</script>`;
 
 seo.structuredData = async function (hookData) {
 	const { data, templateData } = hookData;
 	const tpl = data && data.template && data.template.name;
-	let ld = null;
-	if (tpl === 'categories') {
-		ld = websiteLd();
-	} else if (tpl === 'topic' && !(data.tid && String(data.tid).includes(':'))) {
-		ld = topicLd(data);
-	}
-	if (!ld || !templateData) {
+	if (tpl !== 'categories' || !templateData) {
 		return hookData;
 	}
 	hookData.templateData = {
 		...templateData,
 		useCustomHTML: true,
-		customHTML: `${templateData.useCustomHTML ? (templateData.customHTML || '') : ''}\n${script(ld)}`,
+		customHTML: `${templateData.useCustomHTML ? (templateData.customHTML || '') : ''}\n${script(websiteLd())}`,
 	};
 	return hookData;
 };
