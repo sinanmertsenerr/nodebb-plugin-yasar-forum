@@ -85,6 +85,13 @@ const CATEGORIES = {
 
 // Öğrenci sayfaları (eklentilerin kendi sayfaları). Erasmus+ kendi başlık, açıklama ve sitemap'ini yazar.
 const PAGES = {
+	'/yemekhane': {
+		pageTitle: 'Yaşar Üniversitesi Yemekhane Menüsü: Bugün ve Bu Hafta',
+		description: 'Yaşar Üniversitesi yemekhanesinde bugün ne var? Kahvaltı, öğle ve akşam menüsü, kaloriler, set menü ve tek tek fiyatlar. Her gün güncel.',
+		terms: ['yemekhane', 'yemekhane menüsü', 'yemek listesi', 'bugünkü yemek', 'yemek menüsü', 'kafeterya', 'yemekhane fiyatları'],
+		extra: ['Yaşar yemekhane bugün', 'Yaşar Üniversitesi bugün yemekte ne var', 'Bornova kampüs yemekhane'],
+		changefreq: 'daily',
+	},
 	'/timetable': {
 		title: 'Timetable',
 		pageTitle: 'Ders Programı Oluşturucu (Timetable) – Yaşar Üniversitesi',
@@ -152,6 +159,14 @@ function describe(list, { title, description, keywords: words }) {
 	}
 }
 
+// Arama sonucunda işe yaramayan sayfalar: profiller, üye ve grup listeleri, giriş/kayıt, arama, fediverse akışı.
+// "noindex, follow": Google bağlantıları izler ama sayfayı dizine koymaz; site boş sonuçlarla sulanmaz.
+// Giriş isteyen sayfalar (ör. /unread) misafire giriş formunu 200 ile gösterir; şablon adı "login" olur.
+const NOINDEX_TEMPLATES = new Set(['users', 'groups/list', 'groups/details', 'world', 'search', 'login', 'register',
+	'register/complete', 'reset', 'reset_code', 'tos', 'confirm', 'outgoing', 'popular', 'unread', 'top']);
+const noindex = tpl => NOINDEX_TEMPLATES.has(tpl) || tpl.startsWith('account/');
+seo.noindex = noindex;
+
 seo.metaTags = async function (hookData) {
 	const { req, data } = hookData;
 	const res = data && data.res;
@@ -166,6 +181,9 @@ seo.metaTags = async function (hookData) {
 	// Sayfanın kendi anahtar kelimeleri varsa (ör. Erasmus+ sayfaları) onlar kalır
 	if (!list.some(tag => tag && tag.name === 'keywords')) {
 		list.push({ name: 'keywords', content: SITE_KEYWORDS });
+	}
+	if (noindex(tpl)) {
+		setTag(list, 'name', 'robots', 'noindex, follow');
 	}
 	if (page) {
 		describe(list, {

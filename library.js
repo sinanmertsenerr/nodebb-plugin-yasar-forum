@@ -132,11 +132,21 @@ plugin.categoriesTitle = seo.categoriesTitle;
 plugin.pageTitle = seo.pageTitle;
 plugin.structuredData = seo.structuredData;
 
+// Sitemap: öğrenci sayfaları girer; dizine konmayan üye ve grup listeleri çıkar
+const SITEMAP_SKIP = ['/users', '/groups'];
+
 plugin.addSitemapPages = async function (data) {
 	const rel = nconf.get('relative_path');
-	Object.keys(seo.PAGES).forEach((path) => {
-		data.urls.push({ url: `${rel}${path}`, changefreq: 'weekly', priority: 0.5 });
+	data.urls = data.urls.filter(entry => !SITEMAP_SKIP.some(path => entry.url === `${rel}${path}`));
+	Object.entries(seo.PAGES).forEach(([path, page]) => {
+		data.urls.push({ url: `${rel}${path}`, changefreq: page.changefreq || 'weekly', priority: 0.5 });
 	});
+	return data;
+};
+
+// Kategori sitemap'inde fediverse akışı (/world) da çıkıyor: yalnızca forumun kendi kategorileri ("5/ders-notlari") kalsın
+plugin.sitemapCategories = async function (data) {
+	data.categories = data.categories.filter(c => c && /^\d+\//.test(String(c.slug)));
 	return data;
 };
 
