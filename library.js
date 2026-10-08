@@ -152,6 +152,7 @@ plugin.fillOnlineCount = async function (hookData) {
 		db.sortedSetCount('users:online', Date.now() - ((meta.config.onlineCutoff || 30) * 60000), '+inf'),
 		socketRooms.getTotalGuestCount(),
 	]);
-	hookData.html = hookData.html.replace(ONLINE_PLACEHOLDER, `id="clb-online-count">${users + guests}<`);
+	// Sayfayı açan kişi henüz bağlanmadığı için sayılmamış olabilir: en az 1 (kendisi)
+	hookData.html = hookData.html.replace(ONLINE_PLACEHOLDER, `id="clb-online-count">${Math.max(1, users + guests)}<`);
 	return hookData;
 };
