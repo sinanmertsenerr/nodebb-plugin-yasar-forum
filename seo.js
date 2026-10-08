@@ -83,14 +83,8 @@ const CATEGORIES = {
 	},
 };
 
-// Öğrenci sayfaları (eklentilerin kendi sayfaları)
+// Öğrenci sayfaları (eklentilerin kendi sayfaları). Erasmus+ kendi başlık, açıklama ve sitemap'ini yazar.
 const PAGES = {
-	'/erasmus': {
-		title: 'Erasmus+',
-		pageTitle: 'Erasmus+ Okulları ve Hibe – Yaşar Üniversitesi',
-		description: 'Yaşar Üniversitesi Erasmus+ anlaşmalı okulları: bölümüne göre okul bul, aylık ve yol hibesini hesapla, başvuru yol haritası ve sık sorulanlar.',
-		terms: ['Erasmus', 'Erasmus+', 'Erasmus okulları', 'Erasmus anlaşmalı okullar', 'Erasmus hibe', 'Erasmus başvuru'],
-	},
 	'/timetable': {
 		title: 'Timetable',
 		pageTitle: 'Ders Programı Oluşturucu (Timetable) – Yaşar Üniversitesi',
@@ -169,7 +163,10 @@ seo.metaTags = async function (hookData) {
 	// Denetleyicinin etiketleri (res.locals.metaTags) bu kancadan sonra eklenir: o diziyi yerinde düzenle
 	const list = (res && res.locals && res.locals.metaTags) || hookData.tags;
 
-	setTag(list, 'name', 'keywords', SITE_KEYWORDS);
+	// Sayfanın kendi anahtar kelimeleri varsa (ör. Erasmus+ sayfaları) onlar kalır
+	if (!list.some(tag => tag && tag.name === 'keywords')) {
+		list.push({ name: 'keywords', content: SITE_KEYWORDS });
+	}
 	if (page) {
 		describe(list, {
 			title: `${page.pageTitle} | ${SITE}`,
