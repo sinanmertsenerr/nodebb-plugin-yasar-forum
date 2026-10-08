@@ -114,7 +114,7 @@ const PAGES = {
 	},
 	'/ortalama': {
 		title: 'GPA Hesaplayıcı',
-		pageTitle: 'GPA Hesaplayıcı – Yaşar Üniversitesi Not Ortalaması Hesaplama',
+		pageTitle: 'GPA Hesaplayıcı – Yaşar Üniversitesi Not Ortalaması',
 		description: 'Yaşar Üniversitesi GPA ve not ortalaması hesaplama: bölümünü seç, harf notlarını gir; dönem ve genel ortalaman yönetmelikteki kurallarla hesaplanır.',
 		terms: ['GPA hesaplama', 'ortalama hesaplama', 'not ortalaması'],
 		extra: ['genel ortalama hesaplama', 'dönem ortalaması', 'GANO hesaplama', 'AKTS ortalama'],
