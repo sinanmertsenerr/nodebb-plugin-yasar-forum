@@ -2,6 +2,8 @@
 
 const nconf = nodebb.require('nconf');
 const meta = nodebb.require('./src/meta');
+const db = nodebb.require('./src/database');
+const socketRooms = nodebb.require('./src/socket.io/admin/rooms');
 
 const manifest = require('./static/manifest.json');
 
@@ -118,5 +120,73 @@ plugin.hideToolWidgets = async function (hookData) {
 	if (gate && !GATE_KEEP_AREAS.has(hookData.location)) {
 		hookData.html = '';
 	}
+	return hookData;
+};
+
+// Öğrenci sayfalarının arama motorunda ve paylaşımda görünen adı ve açıklaması.
+// NodeBB bunları sitenin genel adıyla doldurur; her sayfa kendi adıyla çıksın.
+// Sayfa başlığı (<title>) NodeBB'den gelir: ACP > Genel > Başlık düzeni "{pageTitle} | {browserTitle}" olmalı.
+const PAGES = {
+	'/erasmus': {
+		title: 'Erasmus+',
+		description: 'Yaşar Üniversitesi Erasmus+ anlaşmalı okulları: bölümüne göre okul bul, aylık ve yol hibesini hesapla, başvuru yol haritası ve sık sorulanlar.',
+	},
+	'/timetable': {
+		title: 'Timetable',
+		description: 'Yaşar Üniversitesi ders programı oluşturucu: derslerini seç, çakışmayan haftalık programları gör.',
+	},
+	'/cv': {
+		title: 'CV Oluşturucu',
+		description: 'Hazır şablonlarla CV hazırla, PDF olarak indir. Ücretsiz, bilgilerin cihazında kalır.',
+	},
+	'/pdf': {
+		title: 'PDF Araçları',
+		description: 'PDF birleştir, böl, düzenle, imzala; belgeni telefonla tara. Ücretsiz, dosyaların cihazından çıkmaz.',
+	},
+	'/akademik-takvim': {
+		title: 'Akademik Takvim',
+		description: 'Yaşar Üniversitesi 2026-2027 akademik takvimi: dönem başlangıçları, sınav haftaları ve tatiller.',
+	},
+};
+
+const pageOf = (req) => {
+	const rel = nconf.get('relative_path');
+	const path = String((req && req.path) || '').replace(/^\/api(?=\/)/, '');
+	return PAGES[rel && path.startsWith(rel) ? path.slice(rel.length) : path];
+};
+
+plugin.addMetaTags = async function (hookData) {
+	const page = pageOf(hookData.req);
+	if (page) {
+		hookData.tags.push(
+			{ name: 'description', content: page.description },
+			{ property: 'og:description', content: page.description },
+			{ property: 'og:title', content: `${page.title} | ${meta.config.title || 'Yaşar Forum'}` },
+		);
+	}
+	return hookData;
+};
+
+plugin.addSitemapPages = async function (data) {
+	const rel = nconf.get('relative_path');
+	Object.keys(PAGES).forEach((path) => {
+		data.urls.push({ url: `${rel}${path}`, changefreq: 'weekly', priority: 0.5 });
+	});
+	return data;
+};
+
+// Üst şeritteki "çevrimiçi" sayısı (ACP'deki brand-header bileşeni) yan paneldeki istatistikten kopyalanıyordu:
+// sayfa açılınca 1,5 saniye "--" görünüyordu. Sayı sunucuda, istatistik bileşeniyle aynı hesapla yazılır.
+const ONLINE_PLACEHOLDER = 'id="clb-online-count">--<';
+
+plugin.fillOnlineCount = async function (hookData) {
+	if (!hookData || hookData.location !== 'brand-header' || !hookData.html || !hookData.html.includes(ONLINE_PLACEHOLDER)) {
+		return hookData;
+	}
+	const [users, guests] = await Promise.all([
+		db.sortedSetCount('users:online', Date.now() - ((meta.config.onlineCutoff || 30) * 60000), '+inf'),
+		socketRooms.getTotalGuestCount(),
+	]);
+	hookData.html = hookData.html.replace(ONLINE_PLACEHOLDER, `id="clb-online-count">${users + guests}<`);
 	return hookData;
 };
