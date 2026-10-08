@@ -37,10 +37,11 @@ plugin.addScript = async function (scripts) {
 };
 
 // Kenar çubuklarının bu yanıtta açık mı kapalı mı çizileceği (sol çubuk başlıkta, sağ çubuk alt şablonda: iki kanca):
-// - Girişli: kendi kayıtlı seçimi (Harmony hesabına yazar); seçim yapmadıysa ACP'deki varsayılan.
-//   Timetable, CV Oluşturucu ve PDF Araçları'nda kapalı: uygulamalar geniş alana ihtiyaç duyuyor; çıkınca seçimi geri gelir.
-// - Misafir: açık; kendisi kapattıysa kapalı ("yu-sidebars" çerezi, custom.js yazar). Giriş kartında araç yok,
-//   orada kapatılmaz. Sunucu doğrudan doğru hâli çizer: açılışta "açık görünüp kapanma" olmaz.
+// - Timetable, CV Oluşturucu ve PDF Araçları'nda herkes için (girişli ve misafir) kapalı: uygulamalar geniş alana
+//   ihtiyaç duyuyor; sayfadan çıkınca kişinin seçimi geri gelir. Giriş kartı çizilen yanıtta araç yok, orada kapatılmaz.
+// - Başka sayfalarda girişli: kendi kayıtlı seçimi (Harmony hesabına yazar); seçim yapmadıysa ACP'deki varsayılan.
+// - Başka sayfalarda misafir: açık; kendisi kapattıysa kapalı ("yu-sidebars" çerezi, custom.js yazar).
+// Sunucu doğrudan doğru hâli çizer: açılışta "açık görünüp kapanma" olmaz.
 // Yalnızca bu yanıttaki başlığın config kopyası değişir; kişinin kayıtlı ayarı ve tarayıcıdaki config aynı kalır.
 const TOOL_TEMPLATES = ['timetable', 'cv', 'pdf'];
 const GATE_TEMPLATE = 'yu-login-gate';
@@ -56,10 +57,10 @@ plugin.sidebarState = async function (hookData) {
 	const gate = hookData.data && hookData.data.templateToRender === GATE_TEMPLATE;
 	const saved = !!config.theme.openSidebars;
 	let open = saved;
-	if (!(req.uid > 0)) {
-		open = (req.cookies && req.cookies[SIDEBAR_COOKIE]) !== 'closed';
-	} else if (tpl && !gate && TOOL_TEMPLATES.some(name => tpl[name])) {
+	if (tpl && !gate && TOOL_TEMPLATES.some(name => tpl[name])) {
 		open = false;
+	} else if (!(req.uid > 0)) {
+		open = (req.cookies && req.cookies[SIDEBAR_COOKIE]) !== 'closed';
 	}
 	if (open !== saved) {
 		hookData.templateData = { ...hookData.templateData, config: { ...config, theme: { ...config.theme, openSidebars: open } } };
@@ -67,9 +68,14 @@ plugin.sidebarState = async function (hookData) {
 	return hookData;
 };
 
-// Öğrenci araçları (Timetable, CV Oluşturucu, PDF Araçları, GPA Hesaplayıcı) menüde herkese görünür ama yalnızca girişli kullanılır.
-// Misafire aracın yerine giriş kartı çizilir (sunucuda, sayfa geçişlerinde de); aracın kendisi HTML'e hiç girmez.
-// Dönüş adresi oturuma yazılır: giriş yapınca aynı sayfaya dönülür (NodeBB'nin kendi yöntemi, misafir zaten oturum alıyor).
+// Öğrenci araçları (Timetable, CV Oluşturucu, PDF Araçları, GPA Hesaplayıcı) menüde herkese görünür.
+// 09.10.2026'dan beri herkes kullanabilir (TOOLS_MEMBERS_ONLY kapalı): araçlar şimdilik giriş istemiyor.
+// Açıldığında (true) misafire aracın yerine giriş kartı çizilir (sunucuda, sayfa geçişlerinde de); aracın kendisi
+// HTML'e hiç girmez. Dönüş adresi oturuma yazılır: giriş yapınca aynı sayfaya dönülür (NodeBB'nin kendi yöntemi,
+// misafir zaten oturum alıyor). Geri açarken Timetable'da ayrıca ACP > Bileşenler > timetable.tpl'deki iframe
+// bileşeninin grubu yeniden "registered-users" yapılır. Araç eklentilerinin dosyaları herkese açık kalır: kart
+// sayfayı kapatır, dosyalar kimlik sormaz.
+const TOOLS_MEMBERS_ONLY = false;
 const svg = inner => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
 const GATED = {
 	timetable: {
@@ -96,7 +102,7 @@ const GATED = {
 plugin.gateTools = async function (hookData) {
 	const { req, templateData } = hookData;
 	const key = templateData && templateData.template && Object.keys(GATED).find(name => templateData.template[name]);
-	if (!key || (req.uid && req.uid > 0)) {
+	if (!TOOLS_MEMBERS_ONLY || !key || (req.uid && req.uid > 0)) {
 		return hookData;
 	}
 	const rel = nconf.get('relative_path');

@@ -115,9 +115,9 @@ const PAGES = {
 	'/ortalama': {
 		title: 'GPA Hesaplayıcı',
 		pageTitle: 'GPA Hesaplayıcı – Yaşar Üniversitesi Not Ortalaması',
-		description: 'Yaşar Üniversitesi GPA ve not ortalaması hesaplama: bölümünü seç, harf notlarını gir; dönem ve genel ortalaman yönetmelikteki kurallarla hesaplanır.',
+		description: 'Yaşar Üniversitesi not ortalaması (GPA) hesaplama: bölümünü seç, harf notlarını gir. Harf notu katsayıları, örnek hesap, ÇAP ve burs için gereken ortalamalar.',
 		terms: ['GPA hesaplama', 'ortalama hesaplama', 'not ortalaması'],
-		extra: ['genel ortalama hesaplama', 'dönem ortalaması', 'GANO hesaplama', 'AKTS ortalama'],
+		extra: ['genel ortalama hesaplama', 'dönem ortalaması', 'GANO hesaplama', 'AKTS ortalama', 'harf notu katsayıları', 'ÇAP ortalama şartı'],
 	},
 	'/akademik-takvim': {
 		title: 'Akademik Takvim',

@@ -2102,7 +2102,7 @@ function massiveConfettiShow() {
 })();
 
 
-// Timetable, CV ve PDF sayfalarında kenar çubukları kapalı başlar: uygulamalar geniş alana ihtiyaç duyuyor.
+// Timetable, CV ve PDF sayfalarında kenar çubukları kapalı başlar (girişli ve misafir): uygulamalar geniş alana ihtiyaç duyuyor.
 // Sadece görünüm değişir, kullanıcının kayıtlı "açık kenar çubukları" ayarına dokunulmaz; sayfadan çıkınca eski hâline döner.
 // Kullanıcı timetable'dayken çubukları kendisi açıp kaparsa (Harmony bunu kaydeder) artık onun seçimi geçerlidir.
 (function () {
@@ -2116,12 +2116,19 @@ function massiveConfettiShow() {
     return !!(tpl && (tpl.timetable || tpl.cv || tpl.pdf));
   }
 
+  // Kişinin asıl tercihi: girişlide kayıtlı ayarı (config.theme.openSidebars); misafirde kendi seçimi çerezde
+  // ("yu-sidebars", aşağıda yazılır), seçim yapmadıysa açık
+  function preferred() {
+    if (window.app && app.user && app.user.uid > 0) return !!(window.config && config.theme && config.theme.openSidebars);
+    return !/(?:^|;\s*)yu-sidebars=closed(?:;|$)/.test(document.cookie);
+  }
+
   function apply() {
     var bars = document.querySelectorAll('nav.sidebar-left, nav.sidebar-right');
     if (!bars.length) return;
     if (onTimetable()) {
-      // Sunucu çubukları zaten kapalı çizer; kişinin asıl tercihi config.theme.openSidebars'ta durur
-      if (restore === null) restore = bars[0].classList.contains('open') || !!(window.config && config.theme && config.theme.openSidebars);
+      // Sunucu çubukları zaten kapalı çizer; sayfadan çıkınca kişinin asıl tercihine dönülür
+      if (restore === null) restore = bars[0].classList.contains('open') || preferred();
       bars.forEach(function (b) { b.classList.remove('open'); });
     } else if (restore !== null) {
       if (restore) bars.forEach(function (b) { b.classList.add('open'); });
