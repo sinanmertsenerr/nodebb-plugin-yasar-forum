@@ -19,6 +19,7 @@
 		{ "hook": "filter:meta.getLinkTags", "method": "fixCanonical" },
 		{ "hook": "filter:category.build", "method": "categoryTitle" },
 		{ "hook": "filter:categories.build", "method": "categoriesTitle" },
+		{ "hook": "filter:middleware.render", "method": "pageTitle" },
 		{ "hook": "filter:middleware.renderHeader", "method": "structuredData" }
 	],
 	"templates": "templates",

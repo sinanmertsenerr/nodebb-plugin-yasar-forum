@@ -87,28 +87,33 @@ const CATEGORIES = {
 const PAGES = {
 	'/erasmus': {
 		title: 'Erasmus+',
+		pageTitle: 'Erasmus+ Okulları ve Hibe – Yaşar Üniversitesi',
 		description: 'Yaşar Üniversitesi Erasmus+ anlaşmalı okulları: bölümüne göre okul bul, aylık ve yol hibesini hesapla, başvuru yol haritası ve sık sorulanlar.',
 		terms: ['Erasmus', 'Erasmus+', 'Erasmus okulları', 'Erasmus anlaşmalı okullar', 'Erasmus hibe', 'Erasmus başvuru'],
 	},
 	'/timetable': {
 		title: 'Timetable',
+		pageTitle: 'Ders Programı Oluşturucu (Timetable) – Yaşar Üniversitesi',
 		description: 'Yaşar Üniversitesi ders programı oluşturucu: derslerini seç, çakışmayan haftalık programları gör.',
 		terms: ['ders programı', 'ders programı oluşturucu', 'timetable', 'haftalık program', 'ders seçimi'],
 	},
 	'/cv': {
 		title: 'CV Oluşturucu',
+		pageTitle: 'Ücretsiz CV Oluşturucu – Yaşar Üniversitesi Öğrencileri',
 		description: 'Hazır şablonlarla CV hazırla, PDF olarak indir. Ücretsiz, bilgilerin cihazında kalır.',
 		terms: ['CV', 'CV oluşturucu', 'özgeçmiş', 'staj CV'],
 		extra: ['ücretsiz CV oluşturucu', 'CV hazırla', 'özgeçmiş hazırla'],
 	},
 	'/pdf': {
 		title: 'PDF Araçları',
+		pageTitle: 'Ücretsiz PDF Araçları – Yaşar Üniversitesi Öğrencileri',
 		description: 'PDF birleştir, böl, düzenle, imzala; belgeni telefonla tara. Ücretsiz, dosyaların cihazından çıkmaz.',
 		terms: ['PDF araçları'],
 		extra: ['PDF birleştir', 'PDF böl', 'PDF düzenle', 'PDF imzala', 'belge tara', 'ücretsiz PDF araçları'],
 	},
 	'/akademik-takvim': {
 		title: 'Akademik Takvim',
+		pageTitle: 'Yaşar Üniversitesi Akademik Takvim 2026-2027',
 		description: 'Yaşar Üniversitesi 2026-2027 akademik takvimi: dönem başlangıçları, sınav haftaları ve tatiller.',
 		terms: ['akademik takvim', '2026-2027 akademik takvim', 'sınav tarihleri', 'dönem başlangıcı'],
 	},
@@ -156,37 +161,46 @@ function describe(list, { title, description, keywords: words }) {
 seo.metaTags = async function (hookData) {
 	const { req, data } = hookData;
 	const res = data && data.res;
-	// Denetleyicinin etiketleri (res.locals.metaTags) bu kancadan sonra eklenir: aynı diziyi yerinde düzenle
-	const own = (res && res.locals && res.locals.metaTags) || hookData.tags;
 	const tpl = templateOf(data);
 	const page = PAGES[pathOf(req)];
 
-	setTag(hookData.tags, 'name', 'keywords', SITE_KEYWORDS);
+	// Tek keywords etiketi: ACP'deki genel etiket varsa çıkar
+	hookData.tags = hookData.tags.filter(tag => !(tag && tag.name === 'keywords'));
+	// Denetleyicinin etiketleri (res.locals.metaTags) bu kancadan sonra eklenir: o diziyi yerinde düzenle
+	const list = (res && res.locals && res.locals.metaTags) || hookData.tags;
+
+	setTag(list, 'name', 'keywords', SITE_KEYWORDS);
 	if (page) {
-		describe(own, {
-			title: `${page.title} | ${SITE}`,
+		describe(list, {
+			title: `${page.pageTitle} | ${SITE}`,
 			description: page.description,
 			keywords: keywords(page.terms, page.extra),
 		});
 	} else if (tpl === 'category') {
 		const cat = CATEGORIES[data.templateData.cid];
 		if (cat) {
-			describe(own, {
+			describe(list, {
 				title: `${data.templateData.name} – Yaşar Üniversitesi | ${SITE}`,
 				description: cat.description,
 				keywords: keywords(cat.terms, cat.extra),
 			});
 		}
 	} else if (tpl === 'categories') {
-		describe(own, { title: `${HOME_TITLE} | ${SITE}`, description: HOME_DESCRIPTION, keywords: SITE_KEYWORDS });
+		describe(list, { title: `${HOME_TITLE} | ${SITE}`, description: HOME_DESCRIPTION, keywords: SITE_KEYWORDS });
 	}
 	return hookData;
 };
 
 // Ana sayfa (/) ile /categories aynı sayfa: ikisi de kök adresi gösterir, Google "/categories"i ayrı dizine eklemesin
 seo.linkTags = async function (hookData) {
-	const { data } = hookData;
+	const { req, data } = hookData;
 	const res = data && data.res;
+	const path = pathOf(req);
+	// Öğrenci sayfalarının canonical adresi yok: sorgu dizgeli kopyalar (?utm=…) ayrı sayfa sayılmasın
+	if (PAGES[path] && !hookData.links.some(link => link && link.rel === 'canonical')
+		&& !(res && res.locals && (res.locals.linkTags || []).some(link => link && link.rel === 'canonical'))) {
+		hookData.links.push({ rel: 'canonical', href: `${siteUrl()}${path}` });
+	}
 	if (templateOf(data) === 'categories' && res && res.locals && Array.isArray(res.locals.linkTags)) {
 		const canonical = res.locals.linkTags.find(link => link && link.rel === 'canonical');
 		if (canonical && !/[?&]page=([2-9]|\d{2,})/.test(canonical.href)) {
@@ -201,6 +215,15 @@ seo.categoryTitle = async function (hookData) {
 	const { templateData } = hookData;
 	if (templateData && CATEGORIES[templateData.cid]) {
 		templateData.title = `${templateData.name} – Yaşar Üniversitesi`;
+	}
+	return hookData;
+};
+
+// Öğrenci sayfalarının <title>'ı (her eklentinin kendi başlığı kısa: "Erasmus+", "Timetable")
+seo.pageTitle = async function (hookData) {
+	const page = PAGES[pathOf(hookData.req)];
+	if (page && hookData.templateData) {
+		hookData.templateData.title = page.pageTitle;
 	}
 	return hookData;
 };

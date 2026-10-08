@@ -129,6 +129,7 @@ plugin.addMetaTags = seo.metaTags;
 plugin.fixCanonical = seo.linkTags;
 plugin.categoryTitle = seo.categoryTitle;
 plugin.categoriesTitle = seo.categoriesTitle;
+plugin.pageTitle = seo.pageTitle;
 plugin.structuredData = seo.structuredData;
 
 plugin.addSitemapPages = async function (data) {
