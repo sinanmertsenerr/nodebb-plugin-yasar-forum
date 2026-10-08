@@ -723,14 +723,20 @@ function massiveConfettiShow() {
     'sun': '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
     'moon': '<path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/>',
     'wifi-off': '<path d="M12 20h.01"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/><path d="M5 12.859a10 10 0 0 1 5.17-2.69"/><path d="M19 12.859a10 10 0 0 0-2.007-1.523"/><path d="M2 8.82a15 15 0 0 1 4.177-2.643"/><path d="M22 8.82a15 15 0 0 0-11.288-3.764"/><path d="m2 2 20 20"/>',
-    'check': '<path d="M20 6 9 17l-5-5"/>'
+    'check': '<path d="M20 6 9 17l-5-5"/>',
+    // Öğrenci araçları (menüdeki satırlar; masaüstü menüsündekiyle aynı çizim)
+    'file-user': '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M15 18a3 3 0 1 0-6 0"/><circle cx="12" cy="13" r="2"/>',
+    'file-text': '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>',
+    'calculator': '<rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/>',
+    'earth': '<path d="M21.54 15H17a2 2 0 0 0-2 2v4.54"/><path d="M7 3.34V5a3 3 0 0 0 3 3a2 2 0 0 1 2 2c0 1.1.9 2 2 2a2 2 0 0 0 2-2c0-1.1.9-2 2-2h3.17"/><path d="M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05"/><circle cx="12" cy="12" r="10"/>'
   };
 
   // Navigasyon öğelerindeki Font Awesome ikon adı -> Lucide adı
   var FA = {
     'house': 'house', 'list': 'layout-grid', 'inbox': 'inbox', 'tags': 'tags', 'fire': 'flame',
     'user': 'user-round', 'group': 'users-round', 'users': 'users-round', 'cogs': 'settings', 'gears': 'settings',
-    'calendar-day': 'calendar-days', 'calendar': 'calendar-clock'
+    'calendar-day': 'calendar-days', 'calendar': 'calendar-clock',
+    'file-lines': 'file-user', 'file-pdf': 'file-text', 'calculator': 'calculator', 'earth-europe': 'earth'
   };
   var MQ = window.matchMedia('(max-width: 991.98px)');
   var THEME_KEY = 'yu-theme';
