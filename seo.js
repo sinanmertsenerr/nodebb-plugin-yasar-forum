@@ -112,6 +112,13 @@ const PAGES = {
 		terms: ['PDF araçları'],
 		extra: ['PDF birleştir', 'PDF böl', 'PDF düzenle', 'PDF imzala', 'belge tara', 'ücretsiz PDF araçları'],
 	},
+	'/ortalama': {
+		title: 'GPA Hesaplayıcı',
+		pageTitle: 'GPA Hesaplayıcı – Yaşar Üniversitesi Not Ortalaması Hesaplama',
+		description: 'Yaşar Üniversitesi GPA ve not ortalaması hesaplama: bölümünü seç, harf notlarını gir; dönem ve genel ortalaman yönetmelikteki kurallarla hesaplanır.',
+		terms: ['GPA hesaplama', 'ortalama hesaplama', 'not ortalaması'],
+		extra: ['genel ortalama hesaplama', 'dönem ortalaması', 'GANO hesaplama', 'AKTS ortalama'],
+	},
 	'/akademik-takvim': {
 		title: 'Akademik Takvim',
 		pageTitle: 'Yaşar Üniversitesi Akademik Takvim 2026-2027',

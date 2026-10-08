@@ -12,6 +12,7 @@
 		{ "hook": "filter:timetable.build", "method": "gateTools" },
 		{ "hook": "filter:cv.build", "method": "gateTools" },
 		{ "hook": "filter:pdf.build", "method": "gateTools" },
+		{ "hook": "filter:ortalama.build", "method": "gateTools" },
 		{ "hook": "filter:widget.render:html", "method": "hideToolWidgets", "priority": 20 },
 		{ "hook": "filter:widget.render:html", "method": "fillOnlineCount", "priority": 20 },
 		{ "hook": "filter:meta.getMetaTags", "method": "addMetaTags" },

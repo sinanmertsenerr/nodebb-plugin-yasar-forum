@@ -67,7 +67,7 @@ plugin.sidebarState = async function (hookData) {
 	return hookData;
 };
 
-// Öğrenci araçları (Timetable, CV Oluşturucu, PDF Araçları) menüde herkese görünür ama yalnızca girişli kullanılır.
+// Öğrenci araçları (Timetable, CV Oluşturucu, PDF Araçları, GPA Hesaplayıcı) menüde herkese görünür ama yalnızca girişli kullanılır.
 // Misafire aracın yerine giriş kartı çizilir (sunucuda, sayfa geçişlerinde de); aracın kendisi HTML'e hiç girmez.
 // Dönüş adresi oturuma yazılır: giriş yapınca aynı sayfaya dönülür (NodeBB'nin kendi yöntemi, misafir zaten oturum alıyor).
 const svg = inner => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
@@ -81,6 +81,11 @@ const GATED = {
 		title: 'PDF Araçları',
 		text: 'PDF\'lerini birleştir, böl, düzenle, imzala; belgeni telefonla tara. Hepsi ücretsiz, dosyaların cihazından çıkmaz.',
 		icon: svg('<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>'),
+	},
+	ortalama: {
+		title: 'GPA Hesaplayıcı',
+		text: 'Bölümünü seç, harf notlarını gir; dönem ve genel ortalaman yönetmelikteki kurallarla hesaplansın. Notların cihazında kalır.',
+		icon: svg('<rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/>'),
 	},
 	cv: {
 		title: 'CV Oluşturucu',
