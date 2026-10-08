@@ -15,7 +15,11 @@
 		{ "hook": "filter:widget.render:html", "method": "hideToolWidgets", "priority": 20 },
 		{ "hook": "filter:widget.render:html", "method": "fillOnlineCount", "priority": 20 },
 		{ "hook": "filter:meta.getMetaTags", "method": "addMetaTags" },
-		{ "hook": "filter:sitemap.getPages", "method": "addSitemapPages" }
+		{ "hook": "filter:sitemap.getPages", "method": "addSitemapPages" },
+		{ "hook": "filter:meta.getLinkTags", "method": "fixCanonical" },
+		{ "hook": "filter:category.build", "method": "categoryTitle" },
+		{ "hook": "filter:categories.build", "method": "categoriesTitle" },
+		{ "hook": "filter:middleware.renderHeader", "method": "structuredData" }
 	],
 	"templates": "templates",
 	"staticDirs": {

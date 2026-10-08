@@ -6,6 +6,7 @@ const db = nodebb.require('./src/database');
 const socketRooms = nodebb.require('./src/socket.io/admin/rooms');
 
 const manifest = require('./static/manifest.json');
+const seo = require('./seo');
 
 const plugin = module.exports;
 
@@ -123,53 +124,16 @@ plugin.hideToolWidgets = async function (hookData) {
 	return hookData;
 };
 
-// Öğrenci sayfalarının arama motorunda ve paylaşımda görünen adı ve açıklaması.
-// NodeBB bunları sitenin genel adıyla doldurur; her sayfa kendi adıyla çıksın.
-// Sayfa başlığı (<title>) NodeBB'den gelir: ACP > Genel > Başlık düzeni "{pageTitle} | {browserTitle}" olmalı.
-const PAGES = {
-	'/erasmus': {
-		title: 'Erasmus+',
-		description: 'Yaşar Üniversitesi Erasmus+ anlaşmalı okulları: bölümüne göre okul bul, aylık ve yol hibesini hesapla, başvuru yol haritası ve sık sorulanlar.',
-	},
-	'/timetable': {
-		title: 'Timetable',
-		description: 'Yaşar Üniversitesi ders programı oluşturucu: derslerini seç, çakışmayan haftalık programları gör.',
-	},
-	'/cv': {
-		title: 'CV Oluşturucu',
-		description: 'Hazır şablonlarla CV hazırla, PDF olarak indir. Ücretsiz, bilgilerin cihazında kalır.',
-	},
-	'/pdf': {
-		title: 'PDF Araçları',
-		description: 'PDF birleştir, böl, düzenle, imzala; belgeni telefonla tara. Ücretsiz, dosyaların cihazından çıkmaz.',
-	},
-	'/akademik-takvim': {
-		title: 'Akademik Takvim',
-		description: 'Yaşar Üniversitesi 2026-2027 akademik takvimi: dönem başlangıçları, sınav haftaları ve tatiller.',
-	},
-};
-
-const pageOf = (req) => {
-	const rel = nconf.get('relative_path');
-	const path = String((req && req.path) || '').replace(/^\/api(?=\/)/, '');
-	return PAGES[rel && path.startsWith(rel) ? path.slice(rel.length) : path];
-};
-
-plugin.addMetaTags = async function (hookData) {
-	const page = pageOf(hookData.req);
-	if (page) {
-		hookData.tags.push(
-			{ name: 'description', content: page.description },
-			{ property: 'og:description', content: page.description },
-			{ property: 'og:title', content: `${page.title} | ${meta.config.title || 'Yaşar Forum'}` },
-		);
-	}
-	return hookData;
-};
+// Arama motorları: başlık, açıklama, anahtar kelime, JSON-LD (seo.js)
+plugin.addMetaTags = seo.metaTags;
+plugin.fixCanonical = seo.linkTags;
+plugin.categoryTitle = seo.categoryTitle;
+plugin.categoriesTitle = seo.categoriesTitle;
+plugin.structuredData = seo.structuredData;
 
 plugin.addSitemapPages = async function (data) {
 	const rel = nconf.get('relative_path');
-	Object.keys(PAGES).forEach((path) => {
+	Object.keys(seo.PAGES).forEach((path) => {
 		data.urls.push({ url: `${rel}${path}`, changefreq: 'weekly', priority: 0.5 });
 	});
 	return data;
