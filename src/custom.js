@@ -1,15 +1,12 @@
 
  
  function moveLoginButtons() {
-    // Telefonda ve masaüstündeki giriş kartında Google düğmesi formdan önce gelir; aradaki tablet düzeninde yan yana kalır
-    var width = $(window).width();
-    if (width < 768 || width >= 992) {
-      var $loginForm = $('.login-block');
-      var $altLogin = $('.alt-login-block');
+    // Giriş panelinde Google düğmesi her genişlikte formdan önce gelir; klavyeyle gezinme sırası da öyle olsun
+    var $loginForm = $('.login-block');
+    var $altLogin = $('.alt-login-block');
 
-      if ($loginForm.length && $altLogin.length) {
-        $altLogin.insertBefore($loginForm);
-      }
+    if ($loginForm.length && $altLogin.length && !$altLogin.next().is($loginForm)) {
+      $altLogin.insertBefore($loginForm);
     }
   }
 
@@ -130,8 +127,8 @@ observer.observe(document.body, {
 applyGoogleButtonStyle();
 
 
-/* Masaüstü giriş sayfası: cam paneldeki arma, panelin arkasındaki ışık ve uzun başlık.
-   Görünümü custom.scss'teki "Masaüstü: giriş sayfası" bloğu verir; telefonda bu öğeler gizlidir. */
+/* Giriş sayfası: cam paneldeki arma, panelin arkasındaki ışık ve başlık.
+   Görünümü custom.scss'teki "Giriş sayfası" bloğu verir. */
 (function () {
   // Işık huzmeleri: yeri (%), açısı, genişliği (px), salınımı, gecikmesi ve süresi (sn), en parlak hâli.
   // Yerler sabittir; huzmeler bu değerlerin çevresinde yavaşça salınır.
@@ -163,19 +160,8 @@ applyGoogleButtonStyle();
     card.insertBefore(emblem, card.firstChild);
     card.insertBefore(fx, emblem);
 
-    // Telefonda şablonun kısa başlığı kalır, masaüstünde uzun başlık görünür
     var title = card.querySelector('h2');
-    if (title) {
-      var short = document.createElement('span');
-      short.className = 'yu-login-title-short';
-      short.textContent = title.textContent;
-      var wide = document.createElement('span');
-      wide.className = 'yu-login-title-long';
-      wide.textContent = 'Yaşar Forum\'a giriş yap';
-      title.textContent = '';
-      title.appendChild(short);
-      title.appendChild(wide);
-    }
+    if (title) title.textContent = 'Yaşar Forum\'a giriş yap';
 
     var submit = document.getElementById('login');
     if (submit) submit.textContent = 'Giriş yap';
