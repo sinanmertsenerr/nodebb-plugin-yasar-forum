@@ -3,7 +3,9 @@
 
  
  function moveLoginButtons() {
-    if ($(window).width() < 768) {
+    // Telefonda ve masaüstündeki giriş kartında Google düğmesi formdan önce gelir; aradaki tablet düzeninde yan yana kalır
+    var width = $(window).width();
+    if (width < 768 || width >= 992) {
       var $loginForm = $('.login-block');
       var $altLogin = $('.alt-login-block');
 
@@ -103,7 +105,7 @@ function applyGoogleButtonStyle() {
 
   // Sağ: Yazı alanı
   const textWrapper = document.createElement("div");
-  textWrapper.textContent = "Sign in with Google";
+  textWrapper.textContent = googleLi.closest(".alt-register-block") ? "Google ile kayıt ol" : "Google ile giriş yap";
   textWrapper.style.flex = "1";
   textWrapper.style.textAlign = "center";
   textWrapper.style.fontSize = "14px";
@@ -128,6 +130,62 @@ observer.observe(document.body, {
 
 // İlk yüklemede de çalıştır
 applyGoogleButtonStyle();
+
+
+/* Masaüstü giriş sayfası: cam paneldeki arma, panelin arkasındaki ışık ve uzun başlık.
+   Görünümü custom.scss'teki "Masaüstü: giriş sayfası" bloğu verir; telefonda bu öğeler gizlidir. */
+(function () {
+  // Işık huzmeleri: yeri (%), açısı, genişliği (px), salınımı, gecikmesi ve süresi (sn), en parlak hâli.
+  // Yerler sabittir; huzmeler bu değerlerin çevresinde yavaşça salınır.
+  var RAYS = [
+    [11, -20, 300, 1.4, 0, 13, 0.9],
+    [32, 10, 380, 2, -5, 16, 0.75],
+    [52, -4, 340, 1.2, -9, 12, 1],
+    [72, 16, 360, 2.2, -3, 15, 0.8],
+    [91, -14, 300, 1.6, -7, 14, 0.9],
+  ];
+
+  function setup() {
+    var card = document.querySelector('.row.login > .d-flex');
+    if (!card || card.querySelector('.yu-login-emblem')) return;
+
+    var fx = document.createElement('div');
+    fx.className = 'yu-login-fx';
+    fx.setAttribute('aria-hidden', 'true');
+    fx.innerHTML = '<b></b><b></b>' + RAYS.map(function (r) {
+      return '<i style="--l:' + r[0] + '%;--r:' + r[1] + 'deg;--w:' + r[2] + 'px;--s:' + r[3] + 'deg;--t:' + r[4] + 's;--d:' + r[5] + 's;--o:' + r[6] + '"></i>';
+    }).join('');
+
+    var layers = '<i class="yu-login-seal"></i><i class="yu-login-flame"></i>';
+    var emblem = document.createElement('div');
+    emblem.className = 'yu-login-emblem';
+    emblem.setAttribute('aria-hidden', 'true');
+    emblem.innerHTML = '<span class="yu-login-glow">' + layers + '</span>' + layers;
+
+    card.insertBefore(emblem, card.firstChild);
+    card.insertBefore(fx, emblem);
+
+    // Telefonda şablonun kısa başlığı kalır, masaüstünde uzun başlık görünür
+    var title = card.querySelector('h2');
+    if (title) {
+      var short = document.createElement('span');
+      short.className = 'yu-login-title-short';
+      short.textContent = title.textContent;
+      var wide = document.createElement('span');
+      wide.className = 'yu-login-title-long';
+      wide.textContent = 'Yaşar Forum\'a giriş yap';
+      title.textContent = '';
+      title.appendChild(short);
+      title.appendChild(wide);
+    }
+
+    var submit = document.getElementById('login');
+    if (submit) submit.textContent = 'Giriş yap';
+  }
+
+  setup();
+  if (window.jQuery) window.jQuery(window).on('action:ajaxify.end', setup);
+})();
 
 
 async function fetchGroups() {
