@@ -5062,6 +5062,12 @@ html.yapp-lock body {
     grid-column: 1 / -1;
 }
 
+/* Bağlantı tek satırda kalır: yazı tipi geç yüklenince sütun dar hesaplanıp ikiye bölünüyordu */
+.page-login .login-block form > .mb-2 > div:has(#reset-link) {
+    justify-self: end;
+    white-space: nowrap;
+}
+
 .page-login #reset-link {
     color: var(--bs-link-color) !important;
     font-size: 13px !important;
